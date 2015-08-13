@@ -2,6 +2,7 @@
 #include "testscene1.h"
 #include "globalvar.h"
 #include "director.h"
+#include "button.h"
 #include <cmath>
 
 
@@ -19,26 +20,38 @@ void testscene1::init()
 {
 	initPhysics();
 	srand(time(NULL));
-	Sprite* S1 = new Sprite("HelloWorld.png", 0);
-	Sprite* S2 = new Sprite("CloseNormal.png", 0);
-	Sprite* S3 = new Sprite("CloseNormal.png", 0);
-	S1->setflipY(true);
+	Sprite* S1 = new Sprite("HelloWorld.png", 0);   //创建背景精灵
+	Sprite* S2 = new Sprite("CloseNormal.png", 0);  //创建发射者
+	Button* btn = new Button("HelloWorld.png", 0);  //创建按钮
+	Size btnSize;                                   //设置按钮尺寸
+	btnSize.height = 100;
+	btnSize.width = 100;
+	btn->setsize(btnSize);
+	btn->setRectSize(btnSize);
+	btn->setType(RECTANGLE);                        //设置按钮类型（矩形）
+	btn->setpos(400, 400);                          //设置按钮位置
+	btn->setrotation(-0.8*M_PI);                    //设置旋转(逆时针为正)
+	S1->setflipY(true);                             //设置左右翻转
 	S1->setsize(WINDOW_HEIGHT, WINDOW_WIDTH);
 	S1->setpos(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-	S2->setflipX(true);
 	S2->setsize(100, 100);
 	S2->setpos(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2);
 	S2->setrotation(0);
-	addchild(S1);
-	followSprite=addchild(S2);
+	S2->setflipX(true);
+	addchild(S1);                                   //将背景加入到场景中使其显示出来
+	followSprite=addchild(S2);                      //保留ID
+	addchild(btn);
 	registMouseEvent(S2);
-	Director::getTheInstance()->registKey(VK_A);
+	registMouseEvent(btn);                          //注册鼠标事件
+	Director::getTheInstance()->registKey(VK_A);    //注册键盘事件
 	Director::getTheInstance()->registKey(VK_S);
 	Director::getTheInstance()->registKey(VK_D);
 	Director::getTheInstance()->registKey(VK_W);
 	Director::getTheInstance()->registKey(VK_R);
 	//Director::getTheInstance()->registMouseEvent((this), &testscene1::testCallback);
-	Director::getTheInstance()->registMouseEvent((this), &testscene1::addNewSpriteCallback);
+	
+	Director::getTheInstance()->registEvent((this), &testscene1::addNewSpriteCallback);
+	btn->registEvent(this, &testscene1::removeAllSprites, "remove");
 }
 
 
@@ -87,7 +100,6 @@ void testscene1::update(float dt)
 	int32 velocityIterations = 8;
 	int32 positionIterations = 1;
 
-
 	world->Step(timeStep, velocityIterations, positionIterations);
 
 
@@ -110,7 +122,7 @@ void testscene1::update(float dt)
 
 }
 
-void testscene1::testCallback(MouseEventMsg msg)
+void testscene1::testCallback(EventMsg msg)
 {
 	Sprite* c;
 	Point pt;
@@ -173,7 +185,7 @@ void testscene1::initPhysics()
 	groundBody->CreateFixture(&groundBox, 0);
 }
 
-void testscene1::addNewSpriteCallback(MouseEventMsg msg)
+void testscene1::addNewSpriteCallback(EventMsg msg)
 {
 	if (msg._event.type == DOWN&&followSprite)
 	{
@@ -222,4 +234,26 @@ void testscene1::addNewSpriteCallback(MouseEventMsg msg)
 		body->SetAngularVelocity((0.5 - rand() / (float)RAND_MAX));
 	}
 
+}
+
+void testscene1::removeAllSprites(EventMsg msg)
+{
+	if (msg.name == "remove")
+	{
+		for (b2Body* b = world->GetBodyList(); b; )
+		{
+			if (b->GetUserData() != nullptr) {
+				Sprite* sprite = (Sprite*)b->GetUserData();
+				b2Body* p = b;
+				b = b->GetNext();
+				world->DestroyBody(p);
+				removeChildByID(sprite->getid());
+
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 }

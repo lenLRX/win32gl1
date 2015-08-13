@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "button.h"
-
+#include "printText.h"
 Button::Button(string pic, int layer) :Sprite(pic, layer)
 {
 
@@ -36,7 +36,52 @@ float Button::getRadius()
 	return _buttonInfo.radius;
 }
 
-bool Button::mouseEventCallBack(mouseEvent evet)
+void Button::setRectSize(Size size)
 {
+	_buttonInfo.size = size;
+}
 
+Size Button::getRectSize()
+{
+	return _buttonInfo.size;
+}
+
+void Button::raiseEvent(EventMsg msg)
+{
+	Director::getTheInstance()->raiseEvent(msg);
+}
+
+bool Button::mouseEventCallBack(mouseEvent _event)
+{
+	Point pt = _event.point;
+	EventMsg msg;
+	msg.name = callbackName;
+	pt = convertToLocalSpace(pt);
+	if (_event.type == DOWN)
+	{
+		switch (_buttonInfo.type)
+		{
+		case RECTANGLE:
+			if (pt.x > -_size.width / 2 && pt.x<_size.width / 2 && pt.y>-_size.height / 2 && pt.y < _size.height / 2)
+			{
+				raiseEvent(msg);
+				return true;
+			}
+			else
+				return false;
+			break;
+		case CIRCLE:
+			if (sqrt(pt.x*pt.x + pt.y*pt.y) <= _buttonInfo.radius)
+			{
+				raiseEvent(msg);
+				return true;
+			}
+			else
+				return false;
+			break;
+		default:
+			return false;
+			break;
+		}
+	}
 }

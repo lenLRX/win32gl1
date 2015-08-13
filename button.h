@@ -1,7 +1,7 @@
 #ifndef __BUTTON__H__
 #define __BUTTON__H__
 #include "sprite.h"
-
+#include "director.h"
 enum buttonType
 {
 	RECTANGLE,
@@ -26,10 +26,19 @@ public:
 	buttonType getType();                    //获得类型
 	void setRadius(float r);                 //设置半径
 	float getRadius();                       //获得半径
-	void setSize(Size size);                 //设置触摸矩形的长宽
-	Size getSize();                          //获得触摸矩形的长宽
-	bool mouseEventCallBack(mouseEvent evet);//鼠标事件回调函数
+	void setRectSize(Size size);                 //设置触摸矩形的长宽
+	Size getRectSize();                          //获得触摸矩形的长宽
+	template <class _func_type>              //
+	void registEvent(Object* obj, _func_type func,string name)
+	{
+
+		callbackName = name;
+		Director::getTheInstance()->registEvent(obj, func);
+	}
+	void raiseEvent(EventMsg msg);
+	bool mouseEventCallBack(mouseEvent _event);//鼠标事件回调函数
 private:
+	string callbackName;
 	buttonInfo _buttonInfo;
 };
 #endif//__BUTTON__H__

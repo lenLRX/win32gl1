@@ -26,10 +26,11 @@ public:
 	void setMousePos(POINT mousepos);        //设定鼠标位置
 	Point getMousePos();                     //获取鼠标位置
 	template <class _func_type>              //
-	void registMouseEvent(Object* obj, _func_type func)
+	void registEvent(Object* obj, _func_type func)
 	{
 		eventManager.associate(obj, func);
 	}
+	void raiseEvent(EventMsg msg);
 	void raiseMouseEvent(mouseEvent _event); //发出一个鼠标事件              //抛出一个鼠标事件
 	void registKey(int key);                 //注册键盘事件
 	void getKeyState();                      //处理键盘事件
@@ -42,7 +43,7 @@ private:
 	vector<int> _keyList;                     //监听的按键列表
 	POINT _mousepos;                          //鼠标的位置
 	int lastLBUTTONState;                     //上次的鼠标状态用来判断是拖动按下抬起还是移动
-	Event<void, MouseEventMsg> eventManager;  //事件管理者
+	Event<void, EventMsg> eventManager;  //事件管理者
 
 };
 #endif//__DIRECTOCR__H__

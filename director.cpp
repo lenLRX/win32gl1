@@ -121,16 +121,22 @@ void Director::getKeyState()
 	}
 	_event.point = POINT2Point(_mousepos);
 	lastLBUTTONState = LBUTTONState;
-	raiseMouseEvent(_event);
-	MouseEventMsg msg;
+	EventMsg msg;
 	msg._event = _event;
 	msg.name = "test";
-	eventManager.sendEvent(msg);
+	raiseEvent(msg);
+	raiseMouseEvent(_event);
+	
 }
 
 void Director::reset()
 {
+	//TODO:增加清理代码
+}
 
+void Director::raiseEvent(EventMsg msg)
+{
+	eventManager.sendEvent(msg);
 }
 
 void Director::raiseMouseEvent(mouseEvent _event)

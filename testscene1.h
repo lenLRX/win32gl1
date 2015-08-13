@@ -20,8 +20,9 @@ public:
 	virtual void init();
 	virtual void update(float dt);
 	void initPhysics();                        //初始化物理模型
-	void testCallback(MouseEventMsg msg);
-	void addNewSpriteCallback(MouseEventMsg msg);
+	void testCallback(EventMsg msg);
+	void addNewSpriteCallback(EventMsg msg);   //点击一下发射一个精灵
+	void removeAllSprites(EventMsg msg);       //删除所有精灵
 private:
 	int followSprite;
 	b2World* world;

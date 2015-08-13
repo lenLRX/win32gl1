@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include <vector>
 #include "globalvar.h"
+#include "printText.h"
 
 using namespace std;
 Sprite::Sprite(string pic, int layer) \
@@ -157,7 +158,30 @@ int Sprite::getid()
 	return _id;
 }
 
-bool Sprite::mouseEventCallBack(mouseEvent evet)
+Point Sprite::convertToLocalSpace(Point pt)
+{
+	Point returnPT;
+	glLoadIdentity();
+	glRotatef(90.0f + rotation / M_PI * 180, 0.0f, 0.0f, 1.0f);
+	float mat[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, mat);                        //利用opengl的投影矩阵来计算
+	/*
+	glRasterPos2f(0.65f, 0.8f);
+	glPrint("\n%f,%f,%f,%f", mat[0], mat[1], mat[2], mat[3] );
+	glRasterPos2f(0.6f, 0.8f);
+	glPrint("%f,%f,%f,%f", mat[4], mat[5], mat[6], mat[7]);
+	glRasterPos2f(0.55f, 0.8f);
+	glPrint("%f,%f,%f,%f", mat[8], mat[9], mat[10], mat[11]);
+	glRasterPos2f(0.5f, 0.8f);
+	glPrint("%f,%f,%f,%f", mat[12], mat[13], mat[14], mat[15]);
+	*/
+	returnPT.x = mat[4] * (_pos.x - pt.x) + mat[5] * (_pos.y - pt.y);
+	returnPT.y = mat[0] * (_pos.x - pt.x) + mat[1] * (_pos.y - pt.y) ;
+	returnPT.y *= -1;
+	return returnPT;
+}
+
+bool Sprite::mouseEventCallBack(mouseEvent _event)
 {
 	return false;
 }

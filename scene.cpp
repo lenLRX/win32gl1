@@ -49,16 +49,51 @@ int Scene::addchild(Sprite* child)
 
 void Scene::removeChildByID(int id)
 {
-	vector<Sprite*>::iterator it = _sprites.begin();
-	while ( it != _sprites.end())
+	if (_sprites.size())
 	{
-		if ((*it)->getid() == id)
+		vector<Sprite*>::iterator it = _sprites.begin();
+		while (it != _sprites.end())
 		{
-			_sprites.erase(it);
+			if ((*it)->getid() == id)
+			{
+				it= _sprites.erase(it);
+			}
+			else
+			{
+				it++;
+			}
 		}
-		else
+	}
+	
+	if (_keyBoardEventList.size())
+	{
+		vector<Sprite*>::iterator it = _keyBoardEventList.begin();
+		while (it != _keyBoardEventList.end())
 		{
-			it++;
+			if ((*it)->getid() == id)
+			{
+				it = _keyBoardEventList.erase(it);
+			}
+			else
+			{
+				it++;
+			}
+		}
+	}
+	//throw 0;
+	if (_mouseEventList.size())
+	{
+		vector<Sprite*>::iterator it = _mouseEventList.begin();
+		while (it != _mouseEventList.end())
+		{
+			if ((*it)->getid() == id)
+			{
+				it = _mouseEventList.erase(it);
+			}
+			else
+			{
+				it++;
+			}
 		}
 	}
 }

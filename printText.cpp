@@ -56,7 +56,7 @@ GLvoid KillFont(GLvoid)						// 删除显示列表
 GLvoid glPrint(const char *fmt, ...)					// 自定义GL输出字体函数
 
 {
-	char		text[256];				// 保存文字串
+	char		text[1024];				// 保存文字串
 
 	va_list		ap;					// 指向一个变量列表的指针
 

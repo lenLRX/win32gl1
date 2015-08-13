@@ -11,7 +11,7 @@
 using namespace std;
 
 //精灵类
-class Sprite
+class Sprite:public Object
 {
 public:
 	Sprite() = delete;                //禁用默认构造函数
@@ -40,7 +40,8 @@ public:
 	GLuint getTex();                  //获得纹理ID
 	void setid(int id);               //设置id
 	int getid();                      //获得id
-	virtual bool mouseEventCallBack(mouseEvent evet);//鼠标事件回调函数
+	Point convertToLocalSpace(Point pt);//将点从全局坐标系转换到精灵坐标系
+	virtual bool mouseEventCallBack(mouseEvent _event);//鼠标事件回调函数
 protected:
 	int _layer;                       //绘图优先级
 	Point _pos;                       //精灵位置

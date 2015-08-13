@@ -19,7 +19,10 @@ typedef struct
 {
 	string name;
 	mouseEvent _event;
-} MouseEventMsg;
+	Point point;
+	Size size;
+	float param;
+} EventMsg;
 
 class Object
 {

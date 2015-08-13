@@ -75,7 +75,7 @@ Point Director::getMousePos()
 	return POINT2Point(_mousepos);
 }
 
-void Director::registKey(int key)
+void Director::registerKey(int key)
 {
 	_keyList.push_back(key);
 }

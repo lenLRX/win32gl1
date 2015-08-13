@@ -1,14 +1,11 @@
-﻿生成启动时间为 2015/8/13 16:48:51。
+﻿生成启动时间为 2015/8/13 20:37:41。
      1>项目“D:\mygame\win32gl1\win32gl1.vcxproj”在节点 2 上(Build 个目标)。
      1>InitializeBuildStatus:
          正在创建“Debug\win32gl1.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
        ClCompile:
          所有输出均为最新。
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\download\Box2D-master\Box2D-master\Box2D" /I"D:\Program Files (x86)\Visual Leak Detector\include" /I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\cocos" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\extensions" /I"D:\download\vlc-2.0.5-win32\vlc-2.0.5\sdk\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\win32gl1.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /vmg director.cpp
-         director.cpp
-     1>d:\mygame\win32gl1\director.cpp(150): warning C4244: “=”: 从“LONG”转换到“float”，可能丢失数据
-     1>d:\mygame\win32gl1\director.cpp(151): warning C4244: “=”: 从“LONG”转换到“float”，可能丢失数据
-     1>d:\mygame\win32gl1\director.cpp(47): warning C4715: “Director::getCurrentScene”: 不是所有的控件路径都返回值
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\download\Box2D-master\Box2D-master\Box2D" /I"D:\Program Files (x86)\Visual Leak Detector\include" /I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\cocos" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\extensions" /I"D:\download\vlc-2.0.5-win32\vlc-2.0.5\sdk\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\win32gl1.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /vmg menuscene.cpp
+         menuscene.cpp
        ResourceCompile:
          所有输出均为最新。
        Link:
@@ -18,6 +15,7 @@
          Debug\gamelogic.obj
          Debug\globalvar.obj
          Debug\loadpng.obj
+         Debug\menuscene.obj
          Debug\printText.obj
          Debug\scene.obj
          Debug\sprite.obj
@@ -32,4 +30,4 @@
 
 生成成功。
 
-已用时间 00:00:03.23
+已用时间 00:00:02.09

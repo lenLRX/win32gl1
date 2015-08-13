@@ -4,7 +4,7 @@
 #include "director.h"
 #include "button.h"
 #include <cmath>
-
+#include "printText.h"
 
 testscene1::testscene1(string name) :Scene(name), followSprite(0)
 {
@@ -19,10 +19,45 @@ testscene1::~testscene1()
 void testscene1::init()
 {
 	initPhysics();
-	srand(time(NULL));
+	srand(time(NULL));                              //初始化随机数发生器
 	Sprite* S1 = new Sprite("HelloWorld.png", 0);   //创建背景精灵
 	Sprite* S2 = new Sprite("CloseNormal.png", 0);  //创建发射者
 	Button* btn = new Button("HelloWorld.png", 0);  //创建按钮
+	Sprite* coinSprite = new Sprite("core2.png", 0);//金币精灵
+	coinSprite->setsize(50, 50);
+	coinSprite->setpos(200, 200);
+
+
+	b2BodyDef bodyDef;
+	bodyDef.type = b2_staticBody;
+	bodyDef.position.Set(200 / PTM_RATIO, 200 / PTM_RATIO);
+	b2Body *body = world->CreateBody(&bodyDef);
+	body->SetUserData(coinSprite);
+	bodyDef.bullet = false;
+	
+	b2CircleShape circle;
+
+	circle.m_p.Set(0.0f, 0.0f);
+
+	circle.m_radius = 22.0f / PTM_RATIO;
+
+
+
+	// 夹具定义
+	b2FixtureDef fixtureDef;
+	fixtureDef.restitution = 0.8f;
+	//设置夹具的形状
+	fixtureDef.shape = &circle;
+	//设置密度
+	fixtureDef.density = 1.0f;
+	//设置摩擦系数
+	fixtureDef.friction = 0.0f;
+	fixtureDef.isSensor=true;
+	//使用夹具固定形状到物体上	
+	body->CreateFixture(&fixtureDef);
+	
+	world->SetContactListener(this);
+	
 	Size btnSize;                                   //设置按钮尺寸
 	btnSize.height = 100;
 	btnSize.width = 100;
@@ -38,20 +73,21 @@ void testscene1::init()
 	S2->setpos(WINDOW_WIDTH / 2, WINDOW_HEIGHT/2);
 	S2->setrotation(0);
 	S2->setflipX(true);
-	addchild(S1);                                   //将背景加入到场景中使其显示出来
+	//addchild(S1);                                   //将背景加入到场景中使其显示出来
 	followSprite=addchild(S2);                      //保留ID
 	addchild(btn);
-	registMouseEvent(S2);
-	registMouseEvent(btn);                          //注册鼠标事件
-	Director::getTheInstance()->registKey(VK_A);    //注册键盘事件
-	Director::getTheInstance()->registKey(VK_S);
-	Director::getTheInstance()->registKey(VK_D);
-	Director::getTheInstance()->registKey(VK_W);
-	Director::getTheInstance()->registKey(VK_R);
-	//Director::getTheInstance()->registMouseEvent((this), &testscene1::testCallback);
+	coin=addchild(coinSprite);
+	registerMouseEvent(S2);
+	registerMouseEvent(btn);                          //注册鼠标事件
+	Director::getTheInstance()->registerKey(VK_A);    //注册键盘事件
+	Director::getTheInstance()->registerKey(VK_S);
+	Director::getTheInstance()->registerKey(VK_D);
+	Director::getTheInstance()->registerKey(VK_W);
+	Director::getTheInstance()->registerKey(VK_R);
+	//Director::getTheInstance()->registerMouseEvent((this), &testscene1::testCallback);
 	
-	Director::getTheInstance()->registEvent((this), &testscene1::addNewSpriteCallback);
-	btn->registEvent(this, &testscene1::removeAllSprites, "remove");
+	Director::getTheInstance()->registerEvent((this), &testscene1::addNewSpriteCallback);
+	btn->registerEvent(this, &testscene1::removeAllSprites, "remove");
 }
 
 
@@ -120,6 +156,24 @@ void testscene1::update(float dt)
 		}
 	}
 
+}
+
+void testscene1::BeginContact(b2Contact* contact)
+{
+	b2Body* bodyA = contact->GetFixtureA()->GetBody();
+	b2Body* bodyB = contact->GetFixtureB()->GetBody();
+	Sprite* spriteA = (Sprite*)bodyA->GetUserData();
+	Sprite* spriteB = (Sprite*)bodyB->GetUserData();
+	if (spriteA&&spriteB)
+	{
+		if (spriteA->getid() == coin || spriteA->getid() == coin)
+		{
+			glRasterPos2f(0, 0);
+			glPrint("+1");
+		}
+
+	}
+	
 }
 
 void testscene1::testCallback(EventMsg msg)
@@ -223,7 +277,7 @@ void testscene1::addNewSpriteCallback(EventMsg msg)
 		//设置密度
 		fixtureDef.density = 1.0f;
 		//设置摩擦系数
-		fixtureDef.friction = 0.3f;
+		fixtureDef.friction = 0.0f;
 		//使用夹具固定形状到物体上	
 		body->CreateFixture(&fixtureDef);
 		//body->ApplyLinearImpulse(b2Vec2(rand() / (float)RAND_MAX * 10, rand() / (float)RAND_MAX * 10), b2Vec2(1.0f, 1.0f), true);

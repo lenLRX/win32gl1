@@ -26,13 +26,18 @@ public:
 	void setMousePos(POINT mousepos);        //设定鼠标位置
 	Point getMousePos();                     //获取鼠标位置
 	template <class _func_type>              //
-	void registEvent(Object* obj, _func_type func)
+	void registerEvent(Object* obj, _func_type func)
 	{
 		eventManager.associate(obj, func);
 	}
+	template <class _func_type>              //
+	void unregisterEvent(Object* obj, _func_type func)
+	{
+		eventManager.disAssociate(obj, func);
+	}
 	void raiseEvent(EventMsg msg);
 	void raiseMouseEvent(mouseEvent _event); //发出一个鼠标事件              //抛出一个鼠标事件
-	void registKey(int key);                 //注册键盘事件
+	void registerKey(int key);                 //注册键盘事件
 	void getKeyState();                      //处理键盘事件
 	void reset();                            //重置
 private:

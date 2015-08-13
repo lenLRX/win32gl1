@@ -26,7 +26,7 @@ public:
 	Sprite* getChildByID(int id);             //获得精灵
 	void handleMouseEvent(Point pt);          //响应鼠标事件
 	vector<Sprite*>& getSpriteList();         //获取精灵列表
-	void registMouseEvent(Sprite* _sprite);   //注册鼠标事件
+	void registerMouseEvent(Sprite* _sprite);   //注册鼠标事件
 	void processMouseEvent(mouseEvent _event);//处理鼠标事件
 	void clearKeys();                         //清空
 protected:

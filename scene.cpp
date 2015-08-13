@@ -121,7 +121,7 @@ vector<Sprite*>& Scene::getSpriteList()
 	return _sprites;
 }
 
-void Scene::registMouseEvent(Sprite* _sprite)
+void Scene::registerMouseEvent(Sprite* _sprite)
 {
 	_mouseEventList.push_back(_sprite);
 }

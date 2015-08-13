@@ -8,6 +8,7 @@
 #include "gamelogic.h"
 #include "director.h"
 #include "testscene1.h"
+#include "menuscene.h"
 #include <cmath>
 #include <cstdio>
 #include <algorithm>
@@ -487,6 +488,8 @@ void openglInit()
 	///////////////////////////////////////////
 	//在此加载场景
 	Scene* p = (Scene*)new testscene1("test");
+	Scene* p2 = (Scene*)new menuScene("menu");
+	Director::getTheInstance()->addScene(p2);
 	Director::getTheInstance()->addScene(p);
 	Director::getTheInstance()->init();
 }

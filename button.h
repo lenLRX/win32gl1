@@ -29,11 +29,11 @@ public:
 	void setRectSize(Size size);                 //设置触摸矩形的长宽
 	Size getRectSize();                          //获得触摸矩形的长宽
 	template <class _func_type>              //
-	void registEvent(Object* obj, _func_type func,string name)
+	void registerEvent(Object* obj, _func_type func,string name)
 	{
 
 		callbackName = name;
-		Director::getTheInstance()->registEvent(obj, func);
+		Director::getTheInstance()->registerEvent(obj, func);
 	}
 	void raiseEvent(EventMsg msg);
 	bool mouseEventCallBack(mouseEvent _event);//鼠标事件回调函数

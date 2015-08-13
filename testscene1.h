@@ -11,7 +11,7 @@
 #define PTM_RATIO 32
 
 using namespace std;
-class testscene1 :public Scene
+class testscene1 :public Scene,public b2ContactListener
 {
 public:
 	testscene1() = delete;
@@ -19,12 +19,14 @@ public:
 	~testscene1();
 	virtual void init();
 	virtual void update(float dt);
+	virtual void BeginContact(b2Contact* contact);//继承开始碰撞的虚函数
 	void initPhysics();                        //初始化物理模型
 	void testCallback(EventMsg msg);
 	void addNewSpriteCallback(EventMsg msg);   //点击一下发射一个精灵
 	void removeAllSprites(EventMsg msg);       //删除所有精灵
 private:
 	int followSprite;
+	int coin;                                  //击中加分的金币
 	b2World* world;
 };
 

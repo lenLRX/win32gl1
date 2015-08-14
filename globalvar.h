@@ -12,6 +12,8 @@
 #define WINDOW_HEIGHT 600
 #define WINDOW_WIDTH 1080
 
+#define PTM_RATIO 32
+
 #define M_PI 3.1415926
 
 #define VK_0 48

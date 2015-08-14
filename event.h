@@ -100,6 +100,15 @@ public:
 			}
 		}
 	}
+	void clean()
+	{
+		m_totalFunc = 0;
+		for (int i = 0; i < EVENT_LIST_MAX_NUM; i++)
+		{
+			m_objs[i] = NULL;
+			m_func[i] = NULL;
+		}
+	}
 private:
 	Object* m_objs[EVENT_LIST_MAX_NUM];
 	pMemFunc m_func[EVENT_LIST_MAX_NUM];

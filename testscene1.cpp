@@ -8,7 +8,7 @@
 
 testscene1::testscene1(string name) :Scene(name), followSprite(0)
 {
-	init();
+
 }
 
 testscene1::~testscene1()
@@ -88,6 +88,39 @@ void testscene1::init()
 	
 	Director::getTheInstance()->registerEvent((this), &testscene1::addNewSpriteCallback);
 	btn->registerEvent(this, &testscene1::removeAllSprites, "remove");
+}
+
+void testscene1::clean()
+{
+	//第一步：删除精灵
+	if (_sprites.size())
+	{
+		vector<Sprite*>::iterator it = _sprites.begin();
+		while (it != _sprites.end())
+		{
+			delete (*it);
+			it = _sprites.erase(it);
+		}
+	}
+
+	if (_keyBoardEventList.size())
+	{
+		vector<Sprite*>::iterator it = _keyBoardEventList.begin();
+		while (it != _keyBoardEventList.end())
+		{
+			it = _keyBoardEventList.erase(it);
+		}
+	}
+	if (_mouseEventList.size())
+	{
+		vector<Sprite*>::iterator it = _mouseEventList.begin();
+		while (it != _mouseEventList.end())
+		{
+			it = _mouseEventList.erase(it);
+		}
+	}
+	//第二步，删除世界
+	delete world;
 }
 
 

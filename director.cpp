@@ -3,7 +3,7 @@
 
 Director* Director::theInstance = NULL;
 
-Director::Director() :inited(false) , lastLBUTTONState(0)
+Director::Director() :inited(false), lastLBUTTONState(0), currentScene(NULL)
 {
 	
 }
@@ -14,9 +14,10 @@ void Director::create()
 	    theInstance = new Director();
 }
 
-void Director::init()
+void Director::startWithScene(string name)
 {
-	currentScene = _scenes.begin();
+	currentScene = _scenes[name];
+	currentScene->init();
 	inited = true;
 }
 
@@ -25,11 +26,13 @@ Director* Director::getTheInstance()
 	return theInstance;
 }
 
-void Director::gotoNextScene()
+void Director::gotoScene(string name)
 {
-	currentScene++;
-	if (currentScene == _scenes.end())
-		quit();
+	if (currentScene)
+		currentScene->clean();
+	cleanEvents();
+	currentScene = _scenes[name];
+	currentScene->init();
 }
 
 
@@ -40,10 +43,7 @@ void Director::quit()
 
 Scene* Director::getCurrentScene()
 {
-	if (currentScene == _scenes.end())
-		quit();
-	else
-    	return (*currentScene);
+	return currentScene;
 }
 
 int Director::getTotalScene()
@@ -53,7 +53,7 @@ int Director::getTotalScene()
 
 void Director::addScene(Scene* theScene)
 {
-	_scenes.push_back(theScene);
+	_scenes.insert(pair<string, Scene*>(theScene->getname(), theScene));
 }
 
 void Director::setMousePos(POINT mousepos)
@@ -132,6 +132,12 @@ void Director::getKeyState()
 void Director::reset()
 {
 	//TODO:增加清理代码
+	cleanEvents();
+}
+
+void Director::cleanEvents()
+{
+	eventManager.clean();
 }
 
 void Director::raiseEvent(EventMsg msg)

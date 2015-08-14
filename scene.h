@@ -16,6 +16,7 @@ public:
 	Scene(string name);
 	~Scene();
 	virtual void init();                      //初始化场景
+	virtual void clean();                     //清理场景
 	virtual void update(float dt);            //更新函数，需要每一帧调用
 	virtual void onKeyPressedCallback(int key);//按键回调函数
 	virtual bool sceneMouseEvent(mouseEvent _event);//场景鼠标事件处理

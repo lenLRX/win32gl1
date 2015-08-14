@@ -18,11 +18,14 @@ public:
 	Sprite(string pic,int layer);
 	Sprite(GLuint _Texture, int layer);//使用纹理初始化
 	~Sprite();                        //析构函数
-	int getlayer();                   //获取绘图优先级
+	int getlayer() const;             //获取绘图优先级
 	void setlayer(int layer);         //设置绘图优先级
 	Point getpos();                   //获得精灵位置
 	void setpos(Point pos);           //设置精灵位置
 	void setpos(float x, float y);    //设置精灵位置
+	Point getAnchorPoint();           //获得精灵锚点位置
+	void setAnchorPoint(Point anchorPoint);//设置锚点位置
+	void setAnchorPoint(float x, float y);//设置锚点位置
 	Size getsize();                   //获得精灵大小
 	void setsize(Size size);          //设置精灵大小
 	void setsize(float x, float y);   //设置精灵大小
@@ -42,9 +45,11 @@ public:
 	int getid();                      //获得id
 	Point convertToLocalSpace(Point pt);//将点从全局坐标系转换到精灵坐标系
 	virtual bool mouseEventCallBack(mouseEvent _event);//鼠标事件回调函数
+	bool operator< (const Sprite& cp);//重载<以便排序
 protected:
 	int _layer;                       //绘图优先级
 	Point _pos;                       //精灵位置
+	Point _anchorPoint;               //精灵锚点位置
 	Size _size;                       //精灵大小
 	GLuint Tex;                       //纹理ID
 	float rotation;                   //旋转角度（degree）

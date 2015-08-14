@@ -18,6 +18,11 @@ void Scene::init()
 	;
 }
 
+void Scene::clean()
+{
+
+}
+
 void Scene::update(float dt)
 {
 	throw 0;
@@ -96,6 +101,7 @@ void Scene::removeChildByID(int id)
 			}
 		}
 	}
+	id = 0;
 }
 
 Sprite* Scene::getChildByID(int id)

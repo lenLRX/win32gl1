@@ -69,6 +69,15 @@
     <ClInclude Include="menuscene.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="bar.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="simplegame1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -105,6 +114,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="menuscene.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="bar.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simplegame.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -8,6 +8,8 @@ using namespace std;
 Sprite::Sprite(string pic, int layer) \
 :_layer(layer), rotation(0.0f), scaleX(1.0f), scaleY(1.0f), flipX(false), flipY(false)
 {
+	_anchorPoint.x = 0.5;
+	_anchorPoint.y = 0.5;
 	bool HitCache = false;
 	//看一看我们是否已经储存了同名的图片
 	for (vector<Texture>::iterator it = Textures.begin();it!=Textures.end();it++)
@@ -46,7 +48,7 @@ Sprite::~Sprite()
 
 
 //获取绘图优先级
-int Sprite::getlayer()
+int Sprite::getlayer() const
 {
 	return _layer;
 }
@@ -70,6 +72,22 @@ void Sprite::setpos(float x, float y)
 {
 	_pos.x = x;
 	_pos.y = y;
+}
+
+Point Sprite::getAnchorPoint()
+{
+	return _anchorPoint;
+}
+
+void Sprite::setAnchorPoint(Point anchorPoint)
+{
+	_anchorPoint = anchorPoint;
+}
+
+void Sprite::setAnchorPoint(float x, float y)
+{
+	_anchorPoint.x = x;
+	_anchorPoint.y = y;
 }
 
 Size Sprite::getsize()
@@ -184,4 +202,9 @@ Point Sprite::convertToLocalSpace(Point pt)
 bool Sprite::mouseEventCallBack(mouseEvent _event)
 {
 	return false;
+}
+
+bool Sprite::operator< (const Sprite& cp)
+{
+	return this->_layer < cp.getlayer();
 }

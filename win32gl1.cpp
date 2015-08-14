@@ -52,6 +52,7 @@ void getLastCycleTime();//获得上一帧的时间（注意！每个循环只能调用一次！！！）
 void getKeyBoardState();
 
 
+
 DWORD WINAPI  DrawingLoop(LPVOID lpParameter);
 
 ATOM				MyRegisterClass(HINSTANCE hInstance);
@@ -143,7 +144,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // 将实例句柄存储在全局变量中
 	//设置窗口大小
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW&~WS_THICKFRAME,
-		200, 200, WINDOW_WIDTH + 16, WINDOW_HEIGHT + 60, NULL, NULL, hInstance, NULL);
+		200, 200, WINDOW_WIDTH + 16, WINDOW_HEIGHT+32, NULL, NULL, hInstance, NULL);
 	//~WS_THICKFRAME禁止改变窗口大小
 	if (!hWnd)
 	{
@@ -293,31 +294,16 @@ void  SceneShow(GLvoid)
 		Director::getTheInstance()->getKeyState();
 		Scene* thescene = Director::getTheInstance()->getCurrentScene();
 		thescene->update(1 / 60.0);
-		int i = 0;
-		//glPrint(" %s", thescene.getname().c_str());
+		sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end());
 		for (vector<Sprite*>::iterator it = thescene->getSpriteList().begin(); it != thescene->getSpriteList().end(); it++)
 		{
-			i++;
-			int flipXFlag = 1;
-			int flipYFlag = 1;
 			Point origin = (*it)->getpos();
+			Point anchorPoint = (*it)->getAnchorPoint();
 			Size size = (*it)->getsize();
+			swap(size.height, size.width);
 			float rot = (*it)->getrotation();
-			static float rotf = 0.0f;
-			//rotf += 0.2f;
 			glLoadIdentity();
 
-			//glRotatef((*it)->getrotation(), 0.0f, 0.0f, 1.0f);      //绕Z轴旋转
-			//glTranslatef(1.0f, -1.0f, 0.0f);                        //为了方便将坐标系原点转换到左下角
-			//glRotatef(90.0f, 0.0f, 0.0f, 1.0f);                     //为什么图像都要竖着的？我也不懂
-
-
-			//glTranslatef(-size.width / WINDOW_WIDTH / 2, -size.height / WINDOW_HEIGHT/2, 0.0f); //坐标系原点与纹理原点重合
-
-			//glRotatef(-rot, 0.0f, 0.0f, 1.0f);
-
-			//glTranslatef(dx, -dy, 0.0f);
-			//glPrint("%f %f", dx, dy);
 
 			float r = sqrt(size.width*size.width + size.height*size.height);
 
@@ -337,9 +323,9 @@ void  SceneShow(GLvoid)
 
 
 
-			//glTranslatef((origin.x + size.width / 2) / WINDOW_WIDTH * 2 - 1, (origin.y + size.height/2) / WINDOW_HEIGHT * 2 - 1, 0.0f);
 			glRotatef(90.0f + rot/M_PI*180, 0.0f, 0.0f, 1.0f);
-			glViewport(origin.x - r / 2, origin.y-r/2, r, r);
+			//TODO:FIX IT
+			glViewport(origin.x - r *anchorPoint.x, origin.y - r*anchorPoint.y, r, r);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			glEnable(GL_TEXTURE_2D);
@@ -359,34 +345,14 @@ void  SceneShow(GLvoid)
 				swap(br.x, tr.x);
 				swap(br.y, tr.y);;
 			}
-			origin.x *= -1 * flipYFlag;
-			origin.y *= flipXFlag;
 			glBindTexture(GL_TEXTURE_2D, (*it)->getTex());          //与纹理绑定
 			glBegin(GL_POLYGON);
-			//_pos.x = -y;
-			//_pos.y = x;
-			//float r = sqrtf(size.width  * size.width  + size.height * size.height)/2;
-			//- size.height / 2 + cos((rot+45)/180.0*M_PI)*r
-			/*
-			glTexCoord2f(0.0f, 0.0f); glVertex3f((origin.y ) / WINDOW_HEIGHT * 2, 2 - (-origin.x) / WINDOW_WIDTH * 2, 0.0f);    //左下
-			glTexCoord2f(0.0f, 1.0f); glVertex3f((origin.y + size.height) / WINDOW_HEIGHT * 2, 2 - (-origin.x) / WINDOW_WIDTH * 2, 0.0f);      //右下
-			glTexCoord2f(1.0f, 1.0f); glVertex3f((origin.y + size.height) / WINDOW_HEIGHT * 2, 2 - (-origin.x + size.width) / WINDOW_WIDTH * 2, 0.0f);      //右上
-			glTexCoord2f(1.0f, 0.0f); glVertex3f((origin.y) / WINDOW_HEIGHT * 2, 2 - (-origin.x + size.width) / WINDOW_WIDTH * 2, 0.0f);      //左上
-			*/
-
 
 			glTexCoord2f(0.0f, 0.0f); glVertex3f(bl.x, bl.y, 0.0f);    //左下
 			glTexCoord2f(0.0f, 1.0f); glVertex3f(br.x, br.y, 0.0f);      //右下
 			glTexCoord2f(1.0f, 1.0f); glVertex3f(tr.x, tr.y, 0.0f);      //右上
 			glTexCoord2f(1.0f, 0.0f); glVertex3f(tl.x, tl.y, 0.0f);      //左上
 
-
-			/*
-			glTexCoord2f(0.0f, 0.0f); glVertex3f((origin.y) / WINDOW_HEIGHT * 2, (origin.x) / WINDOW_WIDTH * 2, 0.0f);    //左下
-			glTexCoord2f(0.0f, 1.0f); glVertex3f((origin.y + size.height) / WINDOW_HEIGHT * 2,(origin.x) / WINDOW_WIDTH * 2, 0.0f);      //右下
-			glTexCoord2f(1.0f, 1.0f); glVertex3f((origin.y + size.height) / WINDOW_HEIGHT * 2, (origin.x - size.width) / WINDOW_WIDTH * 2, 0.0f);      //右上
-			glTexCoord2f(1.0f, 0.0f); glVertex3f((origin.y) / WINDOW_HEIGHT * 2, (origin.x - size.width) / WINDOW_WIDTH * 2, 0.0f);      //左上
-			*/
 			glEnd();
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_BLEND);
@@ -491,7 +457,7 @@ void openglInit()
 	Scene* p2 = (Scene*)new menuScene("menu");
 	Director::getTheInstance()->addScene(p2);
 	Director::getTheInstance()->addScene(p);
-	Director::getTheInstance()->init();
+	Director::getTheInstance()->startWithScene("menu");
 }
 
 void showFPS()
@@ -520,7 +486,6 @@ void getLastCycleTime()
 	freq = (double)LARGE.QuadPart;//获得频率
 	QueryPerformanceCounter(&LARGE);
 	nowL = LARGE.QuadPart;
-	DWORD now = GetTickCount();
 	LastCycleTime = ((float)(nowL - lasttimeL)) / freq;
 	lasttimeL = nowL;
 }

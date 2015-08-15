@@ -112,6 +112,22 @@ void simplegame1::update(float dt)
 		{
 			pos.x -= 5;
 		}
+		if (pos.x > WINDOW_WIDTH)
+		{
+			pos.x = WINDOW_WIDTH;
+		}
+		if (pos.y > WINDOW_HEIGHT)
+		{
+			pos.y = WINDOW_HEIGHT;
+		}
+		if (pos.x < 0)
+		{
+			pos.x = 0;
+		}
+		if (pos.y < 0)
+		{
+			pos.y = 0;
+		}
 		c->setpos(pos);
 		playerBody->SetTransform(b2Vec2(pos.x / PTM_RATIO, pos.y / PTM_RATIO),0.0f);
 		//Point mouse = Director::getTheInstance()->getMousePos();

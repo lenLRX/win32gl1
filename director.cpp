@@ -1,9 +1,16 @@
 #include "stdafx.h"
 #include "director.h"
+#include "testscene1.h"
+#include "menuscene.h"
+#include "simplegame1.h"
+
+extern bool shouldRun;
+extern void initDrawing();
+extern bool openglInited;
 
 Director* Director::theInstance = NULL;
 
-Director::Director() :inited(false), lastLBUTTONState(0), currentScene(NULL)
+Director::Director() :inited(false), lastLBUTTONState(0), currentScene(NULL), _state(SLEEPING), shouldStart(false)
 {
 	
 }
@@ -19,6 +26,7 @@ void Director::startWithScene(string name)
 	currentScene = _scenes[name];
 	currentScene->init();
 	inited = true;
+	_state = RUNNING;
 }
 
 Director* Director::getTheInstance()
@@ -36,11 +44,6 @@ void Director::gotoScene(string name)
 	currentScene->init();
 }
 
-
-void Director::quit()
-{
-	exit(0);
-}
 
 Scene* Director::getCurrentScene()
 {
@@ -181,12 +184,34 @@ void Director::cleanAllTimers()
 		}
 		timers.clear();
 	}
+	if (timerBuffer.size())
+	{
+		vector<timer*>::iterator it = timerBuffer.begin();
+		while (it != timerBuffer.end())
+		{
+			delete (*it);
+			it++;
+		}
+		timerBuffer.clear();
+	}
 }
 
 void Director::reset()
 {
 	//TODO:增加清理代码
+	cleanAllTimers();
 	cleanEvents();
+	if (_scenes.size())
+	{
+		for (map<string, Scene*>::iterator it = _scenes.begin(); it != _scenes.end();)
+		{
+			delete (*it).second;
+			it = _scenes.erase(it);
+		}
+	}
+	currentScene = NULL;
+	_keyList.clear();
+	_state = SLEEPING;
 }
 
 void Director::cleanEvents()
@@ -210,4 +235,48 @@ Point POINT2Point(POINT pt)
 	pt2.x = pt.x;
 	pt2.y = pt.y;
 	return pt2;
+}
+
+RunningState Director::getState()
+{
+	return _state;
+}
+
+void Director::start()
+{
+	shouldStart = true;
+}
+
+void Director::CheckIfIShouldStart()
+{
+	if (shouldStart)
+	{
+		_start();
+	}
+}
+
+void Director::_start()
+{
+	shouldStart = false;
+	_state = RUNNING;
+	///////////////////////////////////////////
+	//在此加载场景
+	Scene* p = (Scene*)new testscene1("test");
+	Scene* p2 = (Scene*)new menuScene("menu");
+	Scene* p3 = (Scene*)new simplegame1("game1");
+	Director::getTheInstance()->addScene(p2);
+	Director::getTheInstance()->addScene(p);
+	Director::getTheInstance()->addScene(p3);
+	Director::getTheInstance()->startWithScene("game1");
+}
+
+void Director::end()
+{
+	reset();
+	_state = SLEEPING;
+}
+
+void Director::quit()
+{
+	shouldRun = false;
 }

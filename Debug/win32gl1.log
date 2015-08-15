@@ -1,12 +1,20 @@
-﻿生成启动时间为 2015/8/15 19:11:01。
+﻿生成启动时间为 2015/8/16 1:14:01。
      1>项目“D:\mygame\win32gl1\win32gl1.vcxproj”在节点 2 上(Build 个目标)。
      1>InitializeBuildStatus:
-         正在创建“Debug\win32gl1.tlog\unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+         正在对“Debug\win32gl1.tlog\unsuccessfulbuild”执行 Touch 任务。
        ClCompile:
          所有输出均为最新。
-         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\download\Box2D-master\Box2D-master\Box2D" /I"D:\Program Files (x86)\Visual Leak Detector\include" /I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\cocos" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\extensions" /I"D:\download\vlc-2.0.5-win32\vlc-2.0.5\sdk\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\win32gl1.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /vmg clock.cpp
-         clock.cpp
-     1>d:\mygame\win32gl1\clock.cpp(34): warning C4244: “return”: 从“double”转换到“float”，可能丢失数据
+         D:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"D:\download\Box2D-master\Box2D-master\Box2D" /I"D:\Program Files (x86)\Visual Leak Detector\include" /I"C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\Lib" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\cocos" /I"D:\download\cocos2d-x-3.4\cocos2d-x-3.4\extensions" /I"D:\download\vlc-2.0.5-win32\vlc-2.0.5\sdk\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _CRT_SECURE_NO_WARNINGS /D _UNICODE /D UNICODE /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\win32gl1.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /vmg win32gl1.cpp
+         win32gl1.cpp
+     1>d:\mygame\win32gl1\win32gl1.cpp(31): warning C4305: “初始化”: 从“double”到“float”截断
+     1>d:\mygame\win32gl1\win32gl1.cpp(146): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(304): warning C4305: “参数”: 从“double”到“float”截断
+     1>d:\mygame\win32gl1\win32gl1.cpp(334): warning C4244: “参数”: 从“double”转换到“GLfloat”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(336): warning C4244: “参数”: 从“float”转换到“GLsizei”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(336): warning C4244: “参数”: 从“float”转换到“GLint”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(371): warning C4244: “参数”: 从“double”转换到“GLsizei”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(476): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>d:\mygame\win32gl1\win32gl1.cpp(496): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
        ResourceCompile:
          所有输出均为最新。
        Link:
@@ -35,4 +43,4 @@
 
 生成成功。
 
-已用时间 00:00:01.37
+已用时间 00:00:01.26

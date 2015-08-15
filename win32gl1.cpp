@@ -7,9 +7,7 @@
 #include "loadpng.h"
 #include "gamelogic.h"
 #include "director.h"
-#include "testscene1.h"
-#include "menuscene.h"
-#include "simplegame1.h"
+#include <cassert>
 #include <cmath>
 #include <cstdio>
 #include <algorithm>
@@ -144,7 +142,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	Director::create();
 	hInst = hInstance; // 将实例句柄存储在全局变量中
 	//设置窗口大小
-	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW&~WS_THICKFRAME,
+	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW&~WS_THICKFRAME&~WS_MAXIMIZEBOX,
 		200, 200, WINDOW_WIDTH + 18, WINDOW_HEIGHT+61, NULL, NULL, hInstance, NULL);
 	//~WS_THICKFRAME禁止改变窗口大小
 	if (!hWnd)
@@ -154,7 +152,9 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);
-
+	shouldRun = true;
+	if (!DrawingThreadHANDLE)
+		DrawingThreadHANDLE = CreateThread(NULL, 0, DrawingLoop, NULL, 0, DrawingThread);
 	return TRUE;
 }
 
@@ -195,13 +195,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			pauseFlag = false;
 			break;
 		case IDM_START:
-			shouldRun = true;
-			if (!DrawingThreadHANDLE)
-				DrawingThreadHANDLE = CreateThread(NULL, 0, DrawingLoop, NULL, 0, DrawingThread);
+			Director::getTheInstance()->start();
 			break;
 		case IDM_END:
 			shouldRun = false;
-			TerminateThread(DrawingThreadHANDLE, 0);
+			WaitForSingleObject(DrawingThreadHANDLE, INFINITE);
+			CloseHandle(DrawingThreadHANDLE);
 			DrawingThreadHANDLE = NULL;
 			break;
 		default:
@@ -214,9 +213,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		shouldRun = false;
-		TerminateThread(DrawingThreadHANDLE, 0);
+		WaitForSingleObject(DrawingThreadHANDLE, INFINITE);
+		CloseHandle(DrawingThreadHANDLE);
 		PostQuitMessage(0);
-		exit(0);
 		break;
 	case WM_LBUTTONDOWN:
 
@@ -278,116 +277,124 @@ void  SceneInit(int  w, int  h)
 //  这里进行所有的绘图工作 
 
 void  SceneShow(GLvoid)
-
 {
-
-	GetCursorPos(&mousepos);//获得鼠标位置
-
-	getLastCycleTime();//每帧重置一下计时器
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-
-	update(0.1f);
-	if (Director::getTheInstance()->getTotalScene())
+	switch (Director::getTheInstance()->getState())
 	{
-		Director::getTheInstance()->getKeyState();
-		Director::getTheInstance()->tickTimers();
-		Scene* thescene = Director::getTheInstance()->getCurrentScene();
-		thescene->update(1 / 60.0);
-		sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end());
-		for (vector<Sprite*>::iterator it = thescene->getSpriteList().begin(); it != thescene->getSpriteList().end(); it++)
+	case SLEEPING:
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+		SwapBuffers(hDC);
+		Director::getTheInstance()->CheckIfIShouldStart();
+		break;
+	case RUNNING:
+		GetCursorPos(&mousepos);//获得鼠标位置
+
+		getLastCycleTime();//每帧重置一下计时器
+
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glLoadIdentity();
+
+
+		update(0.1f);
+		if (Director::getTheInstance()->getTotalScene())
 		{
-			Point origin = (*it)->getpos();
-			Point anchorPoint = (*it)->getAnchorPoint();
-			Size size = (*it)->getsize();
-			swap(size.height, size.width);
-			float rot = (*it)->getrotation();
-			glLoadIdentity();
-
-
-			float r = sqrt(size.width*size.width + size.height*size.height);
-
-			Point bl, br, tr, tl;
-
-			bl.x = -(size.width) / r;
-			bl.y = -(size.height) / r;
-
-			br.x = (size.width) / r;
-			br.y = -(size.height) / r;
-
-			tr.x = (size.width) / r;
-			tr.y = (size.height) / r;
-
-			tl.x = -(size.width) / r;
-			tl.y = (size.height) / r;
-
-
-
-			glRotatef(90.0f + rot/M_PI*180, 0.0f, 0.0f, 1.0f);
-			//TODO:FIX IT
-			glViewport(origin.x - r *anchorPoint.x, origin.y - r*anchorPoint.y, r, r);
-			glEnable(GL_BLEND);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glEnable(GL_TEXTURE_2D);
-			glMatrixMode(GL_MODELVIEW);
-			if ((*it)->getflipX())                                  //左右翻转
+			Director::getTheInstance()->getKeyState();
+			Director::getTheInstance()->tickTimers();
+			Scene* thescene = Director::getTheInstance()->getCurrentScene();
+			thescene->update(1 / 60.0);
+			sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end());
+			for (vector<Sprite*>::iterator it = thescene->getSpriteList().begin(); it != thescene->getSpriteList().end(); it++)
 			{
-				swap(bl.x, br.x);
-				swap(bl.y, br.y);
-				swap(tl.x, tr.x);
-				swap(tl.y, tr.y);
+				Point origin = (*it)->getpos();
+				Point anchorPoint = (*it)->getAnchorPoint();
+				Size size = (*it)->getsize();
+				swap(size.height, size.width);
+				float rot = (*it)->getrotation();
+				glLoadIdentity();
+
+
+				float r = sqrt(size.width*size.width + size.height*size.height);
+
+				Point bl, br, tr, tl;
+
+				bl.x = -(size.width) / r;
+				bl.y = -(size.height) / r;
+
+				br.x = (size.width) / r;
+				br.y = -(size.height) / r;
+
+				tr.x = (size.width) / r;
+				tr.y = (size.height) / r;
+
+				tl.x = -(size.width) / r;
+				tl.y = (size.height) / r;
+
+
+
+				glRotatef(90.0f + rot / M_PI * 180, 0.0f, 0.0f, 1.0f);
+				//TODO:FIX IT
+				glViewport(origin.x - r *anchorPoint.x, origin.y - r*anchorPoint.y, r, r);
+				glEnable(GL_BLEND);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glEnable(GL_TEXTURE_2D);
+				glMatrixMode(GL_MODELVIEW);
+				if ((*it)->getflipX())                                  //左右翻转
+				{
+					swap(bl.x, br.x);
+					swap(bl.y, br.y);
+					swap(tl.x, tr.x);
+					swap(tl.y, tr.y);
+				}
+
+				if ((*it)->getflipY())                                  //上下翻转
+				{
+					swap(bl.x, tl.x);
+					swap(bl.y, tl.y);
+					swap(br.x, tr.x);
+					swap(br.y, tr.y);;
+				}
+				glBindTexture(GL_TEXTURE_2D, (*it)->getTex());          //与纹理绑定
+				glBegin(GL_POLYGON);
+
+				glTexCoord2f(0.0f, 0.0f); glVertex3f(bl.x, bl.y, 0.0f);    //左下
+				glTexCoord2f(0.0f, 1.0f); glVertex3f(br.x, br.y, 0.0f);      //右下
+				glTexCoord2f(1.0f, 1.0f); glVertex3f(tr.x, tr.y, 0.0f);      //右上
+				glTexCoord2f(1.0f, 0.0f); glVertex3f(tl.x, tl.y, 0.0f);      //左上
+
+				glEnd();
+				glDisable(GL_TEXTURE_2D);
+				glDisable(GL_BLEND);
 			}
-
-			if ((*it)->getflipY())                                  //上下翻转
-			{
-				swap(bl.x, tl.x);
-				swap(bl.y, tl.y);
-				swap(br.x, tr.x);
-				swap(br.y, tr.y);;
-			}
-			glBindTexture(GL_TEXTURE_2D, (*it)->getTex());          //与纹理绑定
-			glBegin(GL_POLYGON);
-
-			glTexCoord2f(0.0f, 0.0f); glVertex3f(bl.x, bl.y, 0.0f);    //左下
-			glTexCoord2f(0.0f, 1.0f); glVertex3f(br.x, br.y, 0.0f);      //右下
-			glTexCoord2f(1.0f, 1.0f); glVertex3f(tr.x, tr.y, 0.0f);      //右上
-			glTexCoord2f(1.0f, 0.0f); glVertex3f(tl.x, tl.y, 0.0f);      //左上
-
-			glEnd();
-			glDisable(GL_TEXTURE_2D);
-			glDisable(GL_BLEND);
 		}
+		///////////////////////////////////////////////////////////
+		//任何glPrint应在此行之后执行（不然看不到）
+		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		glLoadIdentity();
+		glRasterPos2f(-1.0f, -0.8f);
+		ScreenToClient(hWnd, &mousepos);
+		Director::getTheInstance()->setMousePos(mousepos);
+		glPrint("mouse pos(%ld,%ld)", mousepos.x, mousepos.y);
+		glRasterPos2f(-1.0f, -0.6f);
+		glPrint("Keyboard: %c", lastPressedKey);
+		//   交换缓冲区 
+		getKeyBoardState();
+		showFPS();
+		glRasterPos2f(-1.0f, -0.5f);
+		glPrint("aswd control");
+		SwapBuffers(hDC);
+		break;
 	}
-	///////////////////////////////////////////////////////////
-	//任何glPrint应在此行之后执行（不然看不到）
-	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-	glLoadIdentity();
-	glRasterPos2f(-1.0f, -0.8f);
-	ScreenToClient(hWnd, &mousepos);
-	Director::getTheInstance()->setMousePos(mousepos);
-	glPrint("mouse pos(%ld,%ld)", mousepos.x, mousepos.y);
-	glRasterPos2f(-1.0f, -0.6f);
-	glPrint("Keyboard: %c", lastPressedKey);
-	//   交换缓冲区 
-	getKeyBoardState();
-	showFPS();
-	glRasterPos2f(-1.0f, -0.5f);
-	glPrint("aswd control r reset");
-	SwapBuffers(hDC);
-
 }
 
 void initDrawing()
 {
 	int  iFormat;
 
-
+	openglInited = true;
 
 	hDC = GetDC(hWnd);
 
-
+	assert(hDC);
 
 	ZeroMemory(&pfd, sizeof (pfd));
 
@@ -415,13 +422,13 @@ void initDrawing()
 
 
 
-	SetPixelFormat(hDC, iFormat, &pfd);  //  设置到DC 中 
+	assert(SetPixelFormat(hDC, iFormat, &pfd));  //  设置到DC 中 
 
 
 
 	ghRC = wglCreateContext(hDC);      //  创建绘图描述表 
 
-	wglMakeCurrent(hDC, ghRC);       //  使之成为当前绘图描述表 
+	assert(wglMakeCurrent(hDC, ghRC));       //  使之成为当前绘图描述表 
 
 
 	openglInit();
@@ -430,12 +437,18 @@ void initDrawing()
 DWORD WINAPI  DrawingLoop(LPVOID lpParameter)
 {
 	if (!openglInited)
-		initDrawing();
+	initDrawing();
 	while (shouldRun)
 	{
 		SceneShow();
 		Sleep(1000 / 60);
 	}
+	Director::getTheInstance()->reset();
+	assert(wglMakeCurrent(NULL, NULL));
+	assert(wglDeleteContext(ghRC));
+	assert(ReleaseDC(hWnd, hDC));
+	ghRC = NULL;
+	hDC = NULL;
 	return 0;
 }
 
@@ -452,16 +465,6 @@ void openglInit()
 	glMatrixMode(GL_MODELVIEW);
 
 	glLoadIdentity();
-
-	///////////////////////////////////////////
-	//在此加载场景
-	Scene* p = (Scene*)new testscene1("test");
-	Scene* p2 = (Scene*)new menuScene("menu");
-	Scene* p3 = (Scene*)new simplegame1("game1");
-	Director::getTheInstance()->addScene(p2);
-	Director::getTheInstance()->addScene(p);
-	Director::getTheInstance()->addScene(p3);
-	Director::getTheInstance()->startWithScene("game1");
 }
 
 void showFPS()
@@ -499,6 +502,6 @@ void getKeyBoardState()
 	if (true)
 	{
 		glRasterPos2f(-1.0f, -0.2f);
-		glPrint("L button Pressed %d", GetAsyncKeyState(VK_LBUTTON) & 0x8000);
+		//glPrint("L button Pressed %d", GetAsyncKeyState(VK_LBUTTON) & 0x8000);
 	}
 }

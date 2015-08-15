@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "timer.h"
+#include "director.h"
 #include <cassert>
 
-timer::timer() :running(false), delayTime(0)
+timer::timer() :running(false), delayTime(0), _name("no name")
 {
 	LARGE_INTEGER LARGE;
 	QueryPerformanceFrequency(&LARGE);
@@ -16,11 +17,14 @@ void timer::setDelayTime(float t)
 
 void timer::start()
 {
-	assert(delayTime>0);//延迟时间应大于0
-	running = true;
-	LARGE_INTEGER LARGE;
-	QueryPerformanceCounter(&LARGE);
-	startTime = LARGE.QuadPart;
+	if (!running)
+	{
+		assert(delayTime>0);//延迟时间应大于0
+		running = true;
+		LARGE_INTEGER LARGE;
+		QueryPerformanceCounter(&LARGE);
+		startTime = LARGE.QuadPart;
+	}
 }
 
 bool timer::isRuning()
@@ -30,16 +34,18 @@ bool timer::isRuning()
 
 void timer::tick()
 {
+	assert(running);
 	LARGE_INTEGER LARGE;
 	QueryPerformanceCounter(&LARGE);
 	LONGLONG nowL = LARGE.QuadPart;
 	float dt=((float)(nowL - startTime)) / freq;
 	if (dt >= delayTime)
 	{
+		running = false;
 		EventMsg msg;
 		msg.name = _name;
 		Director::getTheInstance()->raiseEvent(msg);
-		running = false;
+		
 	}
 }
 

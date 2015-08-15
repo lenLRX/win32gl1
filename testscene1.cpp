@@ -304,7 +304,7 @@ void testscene1::addNewSpriteCallback(EventMsg msg)
 
 		// 夹具定义
 		b2FixtureDef fixtureDef;
-		fixtureDef.restitution = 0.8f;
+		fixtureDef.restitution = 1.0f;
 		//设置夹具的形状
 		fixtureDef.shape = &circle;
 		//设置密度

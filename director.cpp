@@ -31,6 +31,7 @@ void Director::gotoScene(string name)
 	if (currentScene)
 		currentScene->clean();
 	cleanEvents();
+	cleanAllTimers();
 	currentScene = _scenes[name];
 	currentScene->init();
 }
@@ -127,6 +128,59 @@ void Director::getKeyState()
 	raiseEvent(msg);
 	raiseMouseEvent(_event);
 	
+}
+
+void Director::tickTimers()
+{
+	if (timerBuffer.size())                                    //把缓冲池中的计时器加入到timers中（并不影响计时器精度）
+	{
+		vector<timer*>::iterator it = timerBuffer.begin();
+		while (it != timerBuffer.end())
+		{
+			timers.push_back((*it));
+			it++;
+		}
+	}
+	timerBuffer.clear();
+	if (timers.size())
+	{
+		vector<timer*>::iterator it = timers.begin();
+		while (it != timers.end())
+		{
+			if (!(*it)->isRuning())                       //如果计时器已经触发就删除它
+			{
+				delete (*it);
+				it = timers.erase(it);
+			}
+			else                                          //如果计时器正在运行就滴答一下
+			{
+				
+				(*it)->tick();
+				++it;
+			}
+		}
+	}
+}
+
+void Director::addTimer(timer* _timer)  
+{
+	_timer->start();
+	//timers.push_back(_timer);不能在容器正在迭代的时候插入元素
+	timerBuffer.push_back(_timer);
+}
+
+void Director::cleanAllTimers()
+{
+	if (timers.size())
+	{
+		vector<timer*>::iterator it = timers.begin();
+		while (it != timers.end())
+		{
+		    delete (*it);
+			it++;
+		}
+		timers.clear();
+	}
 }
 
 void Director::reset()

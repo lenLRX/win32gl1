@@ -87,6 +87,7 @@
   <ItemGroup>
     <ClInclude Include="bar.h" />
     <ClInclude Include="button.h" />
+    <ClInclude Include="clock.h" />
     <ClInclude Include="datastruct.h" />
     <ClInclude Include="director.h" />
     <ClInclude Include="event.h" />
@@ -109,6 +110,7 @@
   <ItemGroup>
     <ClCompile Include="bar.cpp" />
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="clock.cpp" />
     <ClCompile Include="director.cpp" />
     <ClCompile Include="gamelogic.cpp" />
     <ClCompile Include="globalvar.cpp" />

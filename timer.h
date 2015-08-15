@@ -1,6 +1,6 @@
 #ifndef __TIMER__H__
 #define __TIMER__H__
-#include "director.h"
+
 #include <string>
 
 using namespace std;

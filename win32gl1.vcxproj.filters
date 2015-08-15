@@ -78,6 +78,9 @@
     <ClInclude Include="timer.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="clock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -123,6 +126,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="clock.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

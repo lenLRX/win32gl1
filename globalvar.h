@@ -9,10 +9,10 @@
 #include "sprite.h"
 #include "scene.h"
 #define maxTextures 32
-#define WINDOW_HEIGHT 600
-#define WINDOW_WIDTH 1080
+#define WINDOW_HEIGHT 600.0
+#define WINDOW_WIDTH 1080.0
 
-#define PTM_RATIO 32
+#define PTM_RATIO 32.0
 
 #define M_PI 3.1415926
 

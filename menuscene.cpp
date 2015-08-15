@@ -30,7 +30,7 @@ void menuScene::init()
 	btn->setType(CIRCLE);
 	btn->setRadius(50);
 	btn->registerEvent(this, &menuScene::gotoNextScene, "NextScene");
-	testbar = new Bar(this, "bar2.png", "bar1.png", "testbar");
+	testbar = new Bar(this, "bar2.png", "bar1.png", "testbar",1);
 	testbar->setPos(200, 200);
 	testbar->setSize(300, 50);
 	

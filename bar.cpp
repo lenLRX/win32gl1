@@ -2,16 +2,17 @@
 #include "bar.h"
 #include "director.h"
 
-Bar::Bar(Scene* theScene, string background, string foreground, string CallbackName) \
-:_theScene(theScene), Callback(CallbackName), value(1.0f)
+Bar::Bar(Scene* theScene, string background, string foreground, string CallbackName, int layer) \
+:_theScene(theScene), Callback(CallbackName), value(1.0f), _layer(layer)
 {
-	_background = new Sprite(background, 99);
-	_foreground = new Sprite(foreground, 99);
+	_background = new Sprite(background, _layer);
+	_foreground = new Sprite(foreground, _layer);
 	_background->setAnchorPoint(0, 0.5);
 	_foreground->setAnchorPoint(0, 0.5);
 	backgroundID = _theScene->addchild(_background);
 	foregroundID = _theScene->addchild(_foreground);
 	Director::getTheInstance()->registerEvent(this, &Bar::onValueChange);
+	updateByValue(1.0f);
 }
 
 Bar::~Bar()

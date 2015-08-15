@@ -11,7 +11,7 @@ class Bar :public Object
 {
 public:
 	Bar() = delete;
-	Bar(Scene* theScene, string background, string foreground, string CallbackName);
+	Bar(Scene* theScene, string background, string foreground, string CallbackName,int layer);
 	~Bar();
 	void setSize(Size size);
 	void setSize(float width, float height);
@@ -30,6 +30,7 @@ protected:
 	string Callback;
 	Point _pos;
 	Size _size;
+	int _layer;
 	float value;
 };
 

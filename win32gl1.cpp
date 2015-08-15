@@ -9,6 +9,7 @@
 #include "director.h"
 #include "testscene1.h"
 #include "menuscene.h"
+#include "simplegame1.h"
 #include <cmath>
 #include <cstdio>
 #include <algorithm>
@@ -144,7 +145,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	hInst = hInstance; // 将实例句柄存储在全局变量中
 	//设置窗口大小
 	hWnd = CreateWindow(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW&~WS_THICKFRAME,
-		200, 200, WINDOW_WIDTH + 16, WINDOW_HEIGHT+32, NULL, NULL, hInstance, NULL);
+		200, 200, WINDOW_WIDTH + 18, WINDOW_HEIGHT+61, NULL, NULL, hInstance, NULL);
 	//~WS_THICKFRAME禁止改变窗口大小
 	if (!hWnd)
 	{
@@ -292,6 +293,7 @@ void  SceneShow(GLvoid)
 	if (Director::getTheInstance()->getTotalScene())
 	{
 		Director::getTheInstance()->getKeyState();
+		Director::getTheInstance()->tickTimers();
 		Scene* thescene = Director::getTheInstance()->getCurrentScene();
 		thescene->update(1 / 60.0);
 		sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end());
@@ -455,9 +457,11 @@ void openglInit()
 	//在此加载场景
 	Scene* p = (Scene*)new testscene1("test");
 	Scene* p2 = (Scene*)new menuScene("menu");
+	Scene* p3 = (Scene*)new simplegame1("game1");
 	Director::getTheInstance()->addScene(p2);
 	Director::getTheInstance()->addScene(p);
-	Director::getTheInstance()->startWithScene("menu");
+	Director::getTheInstance()->addScene(p3);
+	Director::getTheInstance()->startWithScene("game1");
 }
 
 void showFPS()

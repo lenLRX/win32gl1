@@ -20,12 +20,22 @@ void Scene::init()
 
 void Scene::clean()
 {
-
+	;
 }
 
 void Scene::update(float dt)
 {
-	throw 0;
+	;
+}
+
+void Scene::pause()
+{
+	pausing = true;
+}
+
+void Scene::resume()
+{
+	pausing = false;
 }
 
 bool Scene::sceneMouseEvent(mouseEvent _event)

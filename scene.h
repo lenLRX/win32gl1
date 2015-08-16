@@ -18,6 +18,8 @@ public:
 	virtual void init();                      //初始化场景
 	virtual void clean();                     //清理场景
 	virtual void update(float dt);            //更新函数，需要每一帧调用
+	virtual void pause();                     //暂停
+	virtual void resume();                    //继续
 	virtual void onKeyPressedCallback(int key);//按键回调函数
 	virtual bool sceneMouseEvent(mouseEvent _event);//场景鼠标事件处理
 	void setname(string name);                //设置名字
@@ -31,11 +33,12 @@ public:
 	void processMouseEvent(mouseEvent _event);//处理鼠标事件
 	void clearKeys();                         //清空
 protected:
+	bool pausing;                          //是否正在暂停
 	string _name;                          //每个场景唯一的名字
 	vector<Sprite*> _sprites;              //保存本场景的精灵们
 	vector<Sprite*> _mouseEventList;       //注册了鼠标事件的精灵们
 	vector<Sprite*> _keyBoardEventList;    //注册了键盘事件的精灵
-	int _keys[256];                       //按键状态
+	int _keys[256];                        //按键状态
 	int id;                                //用来标记每个精灵
 };
 #endif//__SCENE__H__

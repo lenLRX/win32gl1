@@ -3,11 +3,17 @@
 #include "director.h"
 #include <cassert>
 
-timer::timer() :running(false), delayTime(0), _name("no name")
+timer::timer() :running(false), delayTime(0), pauseHandler(NULL), compensation(0.0f)
 {
 	LARGE_INTEGER LARGE;
 	QueryPerformanceFrequency(&LARGE);
 	freq = (double)LARGE.QuadPart;
+}
+
+timer::~timer()
+{
+	if (pauseHandler)
+		delete pauseHandler;
 }
 
 void timer::setDelayTime(float t)
@@ -34,22 +40,49 @@ bool timer::isRuning()
 
 void timer::tick()
 {
-	assert(running);
-	LARGE_INTEGER LARGE;
-	QueryPerformanceCounter(&LARGE);
-	LONGLONG nowL = LARGE.QuadPart;
-	float dt=((float)(nowL - startTime)) / freq;
-	if (dt >= delayTime)
+	if (!pauseHandler)
 	{
-		running = false;
-		EventMsg msg;
-		msg.name = _name;
-		Director::getTheInstance()->raiseEvent(msg);
+		assert(running);
+		LARGE_INTEGER LARGE;
+		QueryPerformanceCounter(&LARGE);
+		LONGLONG nowL = LARGE.QuadPart;
+		float dt = ((float)(nowL - startTime)) / freq - compensation;
+		if (dt >= delayTime)
+		{
+			running = false;
+			Director::getTheInstance()->raiseEvent(_msg);
+			
+		}
+	}
+	
+}
+
+void timer::pause()
+{
+	if (!pauseHandler)
+	{
+		pauseHandler = new Clock();
+		pauseHandler->start();
+	}
 		
+}
+
+void timer::resume()
+{
+	if (pauseHandler)
+	{
+		compensation += pauseHandler->getTimeSinceStart();
+		delete pauseHandler;
+		pauseHandler = NULL;
 	}
 }
 
 void timer::registerEvent(string name)
 {
-	_name = name;
+	_msg.name = name;
+}
+
+void timer::registerEvent(EventMsg msg)
+{
+	_msg = msg;
 }

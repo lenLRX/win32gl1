@@ -50,14 +50,25 @@ public:
 	void addTimer(timer* _timer);            //加入一个计时器
 	void cleanAllTimers();                   //删除所有计时器
 	void start();                            //开始游戏（设定启动flag，在游戏线程的下一个循环启动游戏）
-	void CheckIfIShouldStart();               //检测我是否应该启动（为什么搞这么复杂呢，http://blog.csdn.net/c__allen/article/details/17687513）
+	void CheckFlag();                        //检查FLAG是否用变化（为什么搞这么复杂呢，http://blog.csdn.net/c__allen/article/details/17687513）
 	void reset();                            //重置
 	void end();                              //结束游戏，进入空转状态
 	void quit();                             //退出游戏
+	void pause();                            //暂停
+	void resume();                           //继续
+	void update();                           //更新（每帧调用一次）
 	RunningState getState();                 //获得状态
 private:
+	float FPS;                                //帧率
+	float dt;                                 //每一帧的时间(1s/FPS)
 	bool shouldStart;                         //设定应该启动的Flag
+	bool shouldStop;                          //设定应该停止的Flag
+	bool shouldPause;                         //设定应该暂停的Flag
+	bool shouldResume;                        //设定应该继续的Flag
 	void _start();                            //真正的启动函数
+	void _end();                               //结束游戏，进入空转状态
+	void _pause();                             //暂停
+	void _resume();                            //继续
 	bool inited;                              //初始化标志
 	static Director* theInstance;             //唯一实例
 	map<string, Scene*> _scenes;              //所有场景

@@ -50,6 +50,10 @@ void getLastCycleTime();//获得上一帧的时间（注意！每个循环只能调用一次！！！）
 
 void getKeyBoardState();
 
+bool lessSprite(Sprite* s1, Sprite* s2)
+{
+	return s1->getlayer() < s2->getlayer();
+}
 
 
 DWORD WINAPI  DrawingLoop(LPVOID lpParameter);
@@ -189,19 +193,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 		case IDM_PAUSE:
-			pauseFlag = true;
+			Director::getTheInstance()->pause();
 			break;
 		case IDM_RESUME:
-			pauseFlag = false;
+			Director::getTheInstance()->resume();
 			break;
 		case IDM_START:
 			Director::getTheInstance()->start();
 			break;
 		case IDM_END:
-			shouldRun = false;
-			WaitForSingleObject(DrawingThreadHANDLE, INFINITE);
-			CloseHandle(DrawingThreadHANDLE);
-			DrawingThreadHANDLE = NULL;
+			Director::getTheInstance()->end();
 			break;
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
@@ -278,13 +279,13 @@ void  SceneInit(int  w, int  h)
 
 void  SceneShow(GLvoid)
 {
+	Director::getTheInstance()->CheckFlag();
 	switch (Director::getTheInstance()->getState())
 	{
 	case SLEEPING:
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glLoadIdentity();
 		SwapBuffers(hDC);
-		Director::getTheInstance()->CheckIfIShouldStart();
 		break;
 	case RUNNING:
 		GetCursorPos(&mousepos);//获得鼠标位置
@@ -301,8 +302,8 @@ void  SceneShow(GLvoid)
 			Director::getTheInstance()->getKeyState();
 			Director::getTheInstance()->tickTimers();
 			Scene* thescene = Director::getTheInstance()->getCurrentScene();
-			thescene->update(1 / 60.0);
-			sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end());
+			Director::getTheInstance()->update();
+			sort(thescene->getSpriteList().begin(), thescene->getSpriteList().end(), lessSprite);
 			for (vector<Sprite*>::iterator it = thescene->getSpriteList().begin(); it != thescene->getSpriteList().end(); it++)
 			{
 				Point origin = (*it)->getpos();

@@ -22,6 +22,7 @@ typedef struct
 	Point point;
 	Size size;
 	float param;
+	void* UserData;
 } EventMsg;
 
 class Object

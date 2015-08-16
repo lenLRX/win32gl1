@@ -206,5 +206,5 @@ bool Sprite::mouseEventCallBack(mouseEvent _event)
 
 bool Sprite::operator< (const Sprite& cp)
 {
-	return this->_layer < cp.getlayer();
+	return this->_layer > cp.getlayer();
 }

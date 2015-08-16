@@ -16,6 +16,8 @@ public:
 	virtual void init();
 	virtual void clean();
 	virtual void update(float dt);
+	virtual void pause();                         //暂停
+	virtual void resume();                        //继续
 	virtual void BeginContact(b2Contact* contact);//继承开始碰撞的虚函数
 	void initPhysics();                           //初始化物理模型
 	void addAlert(EventMsg msg);                  //添加警报

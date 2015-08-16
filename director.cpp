@@ -10,9 +10,11 @@ extern bool openglInited;
 
 Director* Director::theInstance = NULL;
 
-Director::Director() :inited(false), lastLBUTTONState(0), currentScene(NULL), _state(SLEEPING), shouldStart(false)
+Director::Director() :\
+inited(false), lastLBUTTONState(0), currentScene(NULL), _state(SLEEPING)\
+, shouldStart(false),shouldStop(false),shouldPause(false),shouldResume(false), FPS(60.0f)
 {
-	
+	dt = 1 / FPS;
 }
 
 void Director::create()
@@ -244,14 +246,27 @@ RunningState Director::getState()
 
 void Director::start()
 {
-	shouldStart = true;
+	if (_state==SLEEPING)
+	    shouldStart = true;
 }
 
-void Director::CheckIfIShouldStart()
+void Director::CheckFlag()
 {
 	if (shouldStart)
 	{
 		_start();
+	}
+	if (shouldStop)
+	{
+		_end();
+	}
+	if (shouldPause)
+	{
+		_pause();
+	}
+	if (shouldResume)
+	{
+		_resume();
 	}
 }
 
@@ -272,6 +287,12 @@ void Director::_start()
 
 void Director::end()
 {
+	shouldStop = true;
+}
+
+void Director::_end()
+{
+	shouldStop = false;
 	reset();
 	_state = SLEEPING;
 }
@@ -279,4 +300,61 @@ void Director::end()
 void Director::quit()
 {
 	shouldRun = false;
+}
+
+void Director::pause()
+{
+	shouldPause = true;
+}
+
+void Director::_pause()
+{
+	shouldPause = false;
+	if (timers.size())
+	{
+		for (vector<timer*>::iterator it = timers.begin(); it != timers.end(); ++it)
+		{
+			(*it)->pause();
+		}
+	}
+	if (timerBuffer.size())
+	{
+		for (vector<timer*>::iterator it = timerBuffer.begin(); it != timerBuffer.end(); ++it)
+		{
+			(*it)->pause();
+		}
+	}
+	currentScene->pause();
+	dt = 0.0f;
+}
+
+void Director::resume()
+{
+	shouldResume = true;
+}
+
+void Director::_resume()
+{
+	shouldResume = false;
+	if (timers.size())
+	{
+		for (vector<timer*>::iterator it = timers.begin(); it != timers.end(); ++it)
+		{
+			(*it)->resume();
+		}
+	}
+	if (timerBuffer.size())
+	{
+		for (vector<timer*>::iterator it = timerBuffer.begin(); it != timerBuffer.end(); ++it)
+		{
+			(*it)->resume();
+		}
+	}
+	currentScene->resume();
+	dt = 1 / FPS;
+}
+
+void Director::update()
+{
+	currentScene->update(dt);
 }

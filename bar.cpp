@@ -5,7 +5,7 @@
 Bar::Bar(Scene* theScene, string background, string foreground, string CallbackName, int layer) \
 :_theScene(theScene), Callback(CallbackName), value(1.0f), _layer(layer)
 {
-	_background = new Sprite(background, _layer);
+	_background = new Sprite(background, _layer-1);
 	_foreground = new Sprite(foreground, _layer);
 	_background->setAnchorPoint(0, 0.5);
 	_foreground->setAnchorPoint(0, 0.5);

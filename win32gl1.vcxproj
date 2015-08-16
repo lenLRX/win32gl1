@@ -118,7 +118,7 @@
     <ClCompile Include="menuscene.cpp" />
     <ClCompile Include="printText.cpp" />
     <ClCompile Include="scene.cpp" />
-    <ClCompile Include="simplegame.cpp" />
+    <ClCompile Include="simplegame1.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

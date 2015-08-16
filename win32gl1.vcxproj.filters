@@ -122,13 +122,13 @@
     <ClCompile Include="bar.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="simplegame.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="clock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="simplegame1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -205,7 +205,7 @@ void simplegame1::BeginContact(b2Contact* contact)
 	Sprite* spriteB = (Sprite*)bodyB->GetUserData();
 	if (spriteA&&spriteB)
 	{
-		if (spriteA->getid() == playerSprite || spriteA->getid() == playerSprite)
+		if (spriteA->getid() == playerSprite || spriteB->getid() == playerSprite)
 		{
 			damaged();
 		}

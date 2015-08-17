@@ -3,7 +3,7 @@
 #include "testscene1.h"
 #include "menuscene.h"
 #include "simplegame1.h"
-
+#include "simplegame2.h"
 extern bool shouldRun;
 extern void initDrawing();
 extern bool openglInited;
@@ -279,10 +279,12 @@ void Director::_start()
 	Scene* p = (Scene*)new testscene1("test");
 	Scene* p2 = (Scene*)new menuScene("menu");
 	Scene* p3 = (Scene*)new simplegame1("game1");
+	Scene* p4 = (Scene*)new simplegame2("game2");
 	Director::getTheInstance()->addScene(p2);
 	Director::getTheInstance()->addScene(p);
 	Director::getTheInstance()->addScene(p3);
-	Director::getTheInstance()->startWithScene("game1");
+	Director::getTheInstance()->addScene(p4);
+	Director::getTheInstance()->startWithScene("game2");
 }
 
 void Director::end()

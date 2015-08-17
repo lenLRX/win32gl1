@@ -199,7 +199,7 @@ void testscene1::BeginContact(b2Contact* contact)
 	Sprite* spriteB = (Sprite*)bodyB->GetUserData();
 	if (spriteA&&spriteB)
 	{
-		if (spriteA->getid() == coin || spriteA->getid() == coin)
+		if (spriteA->getid() == coin || spriteB->getid() == coin)
 		{
 			glRasterPos2f(0, 0);
 			glPrint("+1");
